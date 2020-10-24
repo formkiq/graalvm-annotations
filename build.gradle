@@ -1,0 +1,133 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
+    }
+    dependencies {
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:3.27.1"
+    }
+}
+
+plugins {
+  id "com.github.spotbugs" version "4.5.0"
+}
+
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+apply plugin: 'checkstyle'
+apply plugin: 'signing'
+apply plugin: 'com.diffplug.gradle.spotless'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+group 'com.formkiq'
+version '1.0.0'
+
+spotless {
+  java {
+    googleJavaFormat()
+  }
+}
+
+spotbugsMain {
+    reports {
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/spotbugs/main/spotbugs.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
+checkstyle {
+    toolVersion '8.29'
+    configFile file("config/checkstyle/checkstyle.xml")
+    configProperties = [project_loc: "${projectDir}"]
+}
+
+tasks.withType(Checkstyle).each { checkstyleTask ->
+    checkstyleTask.doLast {
+        reports.all { report ->
+            def outputFile = report.destination
+            if (outputFile.exists() && outputFile.text.contains("<error ")) {
+                throw new GradleException("There were checkstyle warnings! For more info check $outputFile")
+            }
+        }
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+check {
+      dependsOn(tasks.publishToMavenLocal)
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+artifacts {
+    archives jar
+    
+    archives javadocJar
+    archives sourcesJar
+}
+
+afterEvaluate {
+   tasks.getByName('spotlessCheck').dependsOn(tasks.getByName('spotlessApply'))
+}
+
+publishing {
+	publications {
+	    mavenJava(MavenPublication) {
+	        from components.java
+	        
+	        pom {
+                name = 'Graalvm Annotations'
+                description = 'Graalvm Annotations'
+                url = 'https://github.com/formkiq/graalvm-annotations'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'mfriesen'
+                        name = 'Mike Friesen'
+                        email = 'mike@formkiq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/formkiq/graalvm-annotations.git'
+                    developerConnection = 'scm:git:ssh://github.com/formkiq/graalvm-annotations.git'
+                    url = 'https://github.com/formkiq/graalvm-annotations.git'
+                }
+            }
+	    }
+	}
+	repositories {
+		maven {
+		  credentials {
+		    username project.repoUser
+		    password project.repoPassword
+		  }
+		  url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+		}
+	}
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
