@@ -10,5 +10,91 @@ Can be used in combination with [Gradle Graalvm Annotation Processor](https://gi
 | @ReflectableClass | Manually configure Graalvm reflection class (based on https://github.com/oracle/graal/blob/master/substratevm/Reflection.md). Can be used on any class you cannot apply the @Reflectable annotation to. |
 @ReflectableClasses | List of ReflectableClass definitions. |
 @ReflectableField | Used with @ReflectableClass to define Graalvm reflection for a class field. |
-@ReflectableImport | Import existing Graalvm 'ReflectionConfigurationFiles' File. |
 @ReflectableMethod | Used with @ReflectableClass to define Graalvm reflection for a class method. |
+@ReflectableImport | Import existing Graalvm 'ReflectionConfigurationFiles' File. |
+
+## @Reflectable Example
+
+### TestObject.java
+<pre>
+@Reflectable
+class TestObject {
+
+  /** Preset Key. */
+  @Reflectable
+  private String id;
+}
+</pre>
+
+## @ReflectableClasses / @ReflectableClass Example
+### TestObject.java
+<pre>
+class TestObject {
+  private String foo;
+  public void bar(String s) {}
+}
+</pre>
+
+### Test.java
+<pre>
+@ReflectableClasses({
+  @ReflectableClass(
+    className=TestObject.class,
+    allDeclaredConstructors=false,
+    fields = {@ReflectableField(allowWrite = true, name = "foo")},
+    methods = {@ReflectableMethod(name = "bar", parameterTypes = {"java.lang.String"})}
+  )
+})
+class Test { }
+</pre>
+
+## @ReflectableImport classes Example
+
+### Test.java
+<pre>
+@Reflectable
+class TestObject {
+  /** Preset Key. */
+  @Reflectable
+  private String id;
+}
+</pre>
+<pre>
+@ReflectableImport(classes = {TestObject.class})
+class Test { }
+</pre>
+
+## @ReflectableImport file Example
+
+### test.json
+<pre>
+[
+  {
+    "name": "sample.Test",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "fields": [
+      {
+        "name": "foo"
+      }
+    ],
+    "methods": [
+      {
+        "name": "bar",
+        "parameterTypes": [
+          "int"
+        ]
+      }
+    ]
+  }
+]
+}
+</pre>
+
+### Test.java
+<pre>
+@ReflectableImport(files="test.json")
+class Test { }
+</pre>
