@@ -13,6 +13,27 @@ Can be used in combination with [Gradle Graalvm Annotation Processor](https://gi
 @ReflectableMethod | Used with @ReflectableClass to define Graalvm reflection for a class method. |
 @ReflectableImport | Import existing Graalvm 'ReflectionConfigurationFiles' File. |
 
+## Maven Installation
+Add the following to your pom.xml
+
+```xml
+    <dependency>
+        <groupId>com.formkiq</groupId>
+        <artifactId>graalvm-annotations</artifactId>
+        <version>VERSION</version>
+        <!-- Replace VERSION with the version you want to use -->
+    </dependency>
+```
+
+## Gradle Installation
+
+Add the following to your build.gradle
+
+```
+   implementation group: 'com.formkiq', name: 'graalvm-annotations', version:'VERSION'
+   <!-- Replace VERSION with the version you want to use -->
+```
+
 ## @Reflectable Example
 
 ### TestObject.java
