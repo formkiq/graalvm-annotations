@@ -1,5 +1,7 @@
 # Graalvm Annotations
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 Java Annotations for generating Graalvm ReflectionConfigurationFiles (https://github.com/oracle/graal/blob/master/substratevm/Reflection.md).
 
 Can be used in combination with [Gradle Graalvm Annotation Processor](https://github.com/formkiq/graalvm-annotations-processor).
