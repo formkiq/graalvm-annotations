@@ -20,8 +20,8 @@ Add the following to your pom.xml
     <dependency>
         <groupId>com.formkiq</groupId>
         <artifactId>graalvm-annotations</artifactId>
-        <version>VERSION</version>
-        <!-- Replace VERSION with the version you want to use -->
+        <version>1.0.0</version>
+        <!-- Replace 1.0.0 with the version you want to use -->
     </dependency>
 ```
 
@@ -30,8 +30,8 @@ Add the following to your pom.xml
 Add the following to your build.gradle
 
 ```
-   implementation group: 'com.formkiq', name: 'graalvm-annotations', version:'VERSION'
-   <!-- Replace VERSION with the version you want to use -->
+   implementation group: 'com.formkiq', name: 'graalvm-annotations', version:'1.0.0'
+   <!-- Replace 1.0.0 with the version you want to use -->
 ```
 
 ## @Reflectable Example
