@@ -26,11 +26,11 @@ import java.lang.annotation.Target;
 public @interface ReflectableField {
 
   /**
-   * Set Method Name.
+   * Set allowUnsafeAccess on Field.
    *
    * @return boolean
    */
-  String name() default "";
+  boolean allowUnsafeAccess() default false;
 
   /**
    * Set allowWrite on Field.
@@ -38,4 +38,11 @@ public @interface ReflectableField {
    * @return boolean
    */
   boolean allowWrite() default false;
+
+  /**
+   * Set Method Name.
+   *
+   * @return boolean
+   */
+  String name() default "";
 }
