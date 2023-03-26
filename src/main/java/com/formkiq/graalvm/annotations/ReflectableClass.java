@@ -13,6 +13,7 @@
 package com.formkiq.graalvm.annotations;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -21,16 +22,17 @@ import java.lang.annotation.Target;
  * An annotation that allows adding a class to Graalvm's list of Reflection classes to process.
  * Based on https://github.com/oracle/graal/blob/master/substratevm/REFLECTION.md
  */
+@Repeatable(ReflectableClass.ReflectableClasses.class)
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface ReflectableClass {
 
-  /**
-   * Set Class Name.
-   *
-   * @return Class[]
-   */
-  Class<?> className();
+  /** Support multiple @Reflectable definitions. */
+  @Retention(RetentionPolicy.SOURCE)
+  @Target(ElementType.TYPE)
+  @interface ReflectableClasses {
+    ReflectableClass[] value();
+  }
 
   /**
    * Include all declared constructors to a {@link ElementType#TYPE}.
@@ -75,11 +77,11 @@ public @interface ReflectableClass {
   boolean allPublicMethods() default true;
 
   /**
-   * Sets {@link ReflectableMethod}.
+   * Set Class Name.
    *
-   * @return {@link ReflectableMethod}.
+   * @return Class[]
    */
-  ReflectableMethod[] methods() default {};
+  Class<?> className();
 
   /**
    * Sets {@link ReflectableField}.
@@ -87,4 +89,11 @@ public @interface ReflectableClass {
    * @return {@link ReflectableField}.
    */
   ReflectableField[] fields() default {};
+
+  /**
+   * Sets {@link ReflectableMethod}.
+   *
+   * @return {@link ReflectableMethod}.
+   */
+  ReflectableMethod[] methods() default {};
 }
