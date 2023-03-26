@@ -1,28 +1,15 @@
-buildscript {
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-        jcenter()
-    }
-    dependencies {
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:3.27.1"
-    }
-}
-
 plugins {
-  id "com.github.spotbugs" version "4.5.0"
+	id 'java'
+	id 'maven-publish'
+	id 'signing'
+	id 'checkstyle'
+  	id 'com.diffplug.spotless' version '6.12.0'
+  	id 'com.github.spotbugs'  version '5.0.13'
+    id 'com.github.ben-manes.versions' version '0.44.0'
 }
-
-apply plugin: 'java-library'
-apply plugin: 'maven-publish'
-apply plugin: 'checkstyle'
-apply plugin: 'signing'
-apply plugin: 'com.diffplug.gradle.spotless'
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
 
 group 'com.formkiq'
-version '1.1.0'
+version '1.2.0'
 
 spotless {
   java {
@@ -31,14 +18,12 @@ spotless {
 }
 
 spotbugsMain {
-    reports {
-        html {
-            enabled = true
-            destination = file("$buildDir/reports/spotbugs/main/spotbugs.html")
-            stylesheet = 'fancy-hist.xsl'
-        }
+  reports {
+    html {
+      enabled = true
     }
-}
+  }
+} 
 
 checkstyle {
     toolVersion '8.29'
@@ -58,7 +43,8 @@ tasks.withType(Checkstyle).each { checkstyleTask ->
 }
 
 repositories {
-    jcenter()
+	mavenLocal()
+	mavenCentral()
 }
 
 check {
@@ -68,6 +54,10 @@ check {
 java {
     withJavadocJar()
     withSourcesJar()
+
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(11))
+	}
 }
 
 javadoc {
