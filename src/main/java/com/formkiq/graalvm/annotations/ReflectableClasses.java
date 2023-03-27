@@ -13,6 +13,7 @@
 package com.formkiq.graalvm.annotations;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -20,7 +21,10 @@ import java.lang.annotation.Target;
 /**
  * An annotation that allows adding a classes to Graalvm's list of Reflection classes to process.
  * Based on https://github.com/oracle/graal/blob/master/substratevm/REFLECTION.md
+ *
+ * @deprecated You can now use multiple {@link ReflectableClass} as it supports {@link Repeatable}.
  */
+@Deprecated(forRemoval = true, since = "1.2.0")
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
 public @interface ReflectableClasses {
